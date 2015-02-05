@@ -35,6 +35,16 @@ int main()
 		printf("rssi value = %i\n", rssi_value);
 	}
 
+	/* Some file I/O */
+	FILE *f = fopen("rar.txt", "w");
+	if (f == NULL)
+	{
+		printf("Error opening file\n");
+		return 0;
+	}
+	fprintf(f, "ha!\n");
+	fclose(f);
+
 	/* Be sure to close the output */
 	close(fd);
 }
