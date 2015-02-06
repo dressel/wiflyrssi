@@ -19,7 +19,7 @@ int main()
 	int fd = startconnection();
 	if (fd < 0)
 	{
-		printf("Error opening file. Exiting...\n");
+		printf("Error connecting to wifly. Exiting...\n");
 		return 0;
 	}
 
