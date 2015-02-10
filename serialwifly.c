@@ -12,7 +12,8 @@
 
 
 /**
- * rar
+ * Start the connection to /dev/ttyUSB0
+ * TODO: Allow user to specify. Maybe it isn't /dev/ttyUSB0
  */
 int startconnection()
 {
