@@ -12,7 +12,7 @@
 #define WD 1000
 
 /* Main function */
-int main()
+int main(int argc, char *argv[])
 {
 	/* Start the connection to the WiFly */
 	/* If the connection does not exist, quit */
@@ -26,43 +26,20 @@ int main()
 	/* Go into command mode */
 	commandmode(fd);
 
-	/* Tell it to scan */
-	/*
-	int i;
-	int rssi_value;
-	for (i = 1; i <= 10; i++)
-	{
-		rssi_value = scanrssi(fd, "JAMMER01");
-		printf("rssi value = %i\n", rssi_value);
-	}
-	*/
-
-	//scanrssi10(fd, "JAMMER01");
-
-	/* Some file I/O */
-	FILE *f = fopen("rar.txt", "w");
+	/* Open a file to write values to */
+	/* Appending values */
+	FILE *f = fopen("wiflytest.txt", "a");
 	if (f == NULL)
 	{
 		printf("Error opening file\n");
 		return 0;
 	}
-	//fprintf(f, "ha!\n");
-	scanrssi_f(fd, "JAMMER01", f, 10);
-	fclose(f);
 
-	/* Be sure to close the output */
+	/* Scan values to this file */
+	scanrssi_f(fd, "JAMMER01", f, 10);
+
+	/* Be sure to close the output file and connection */
+	fclose(f);
 	close(fd);
 }
 
-/* Writes a new line */
-int scanrssi_f(int fd, char *ssid, FILE *f, int numtimes)
-{
-	int rssi_value;
-	int i;
-	for (i = 1; i <= numtimes; i++)
-	{
-		rssi_value = scanrssi(fd, ssid);
-		fprintf(f, "%i,", rssi_value);
-	}
-	fprintf(f, "\n");
-}

@@ -23,7 +23,7 @@ int startconnection()
 
 
 /**
- * Scans the rssi values of the available channels
+ * Scans the channels and returns the rssi of the specified SSID
  */
 int scanrssi(int fd, char *ssid)
 {
@@ -34,6 +34,25 @@ int scanrssi(int fd, char *ssid)
 	//printf("buf is:\n%s\n", buf);
 
 	return getrssi(buf, ssid);
+}
+
+/**
+ * Scans numtimes times and prints rssi values to a line in a file
+ */
+int scanrssi_f(int fd, char *ssid, FILE *f, int numtimes)
+{
+	int rssi_value;
+	int i;
+	for (i = 1; i <= (numtimes-1); i++)
+	{
+		rssi_value = scanrssi(fd, ssid);
+		fprintf(f, "%i,", rssi_value);
+	}
+
+	/* Don't include comma for last one */
+	/* TODO: I end with a newline. Should I? */
+	rssi_value = scanrssi(fd, ssid);
+	fprintf(f, "%i\n", rssi_value);
 }
 
 /**
@@ -57,9 +76,11 @@ int commandmode(int fd)
 }
 
 /**
- * Takes in a string of output from scan command
- *
+ * Parses output from scan command.
+ * Searches for SSID provided.
+ * Returns the RSSI value of that SSID, as an int.
  */
+// TODO: Should this be static?
 int getrssi(char *buf, char *ssid)
 {
 	char *delim = "\n";
