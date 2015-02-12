@@ -47,12 +47,14 @@ int scanrssi_f(int fd, char *ssid, FILE *f, int numtimes)
 	{
 		rssi_value = scanrssi(fd, ssid);
 		fprintf(f, "%i,", rssi_value);
+		printf("rssi_value = %i\n", rssi_value);
 	}
 
 	/* Don't include comma for last one */
 	/* TODO: I end with a newline. Should I? */
 	rssi_value = scanrssi(fd, ssid);
 	fprintf(f, "%i\n", rssi_value);
+	printf("rssi_value = %i\n", rssi_value);
 }
 
 /**
