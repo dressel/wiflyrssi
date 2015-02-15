@@ -4,51 +4,51 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
-
 #include <limits.h>
 
 #include "serialwifly.h"
 
-#define WD 1000
-
-/* Main function */
+/**
+ * 1 argument:  Degree at which only antenna is measured
+ * 2 arguments: 1st is number of antennas (1 or 2), 2nd is degree
+ *
+ * Examples:
+ *  ./a.out => Measures output of a single antenna
+ *  ./a.out 20 => Measures output of a single antenna at 20 degrees
+ *  ./a.out 2 20 => Measures output of two antennas at 20 degrees
+ */
 int main(int argc, char *argv[])
 {
 	/* Specify the degree */
-	int degree = 0;
-	if (argc == 2)
+	int degree;
+	if (argc == 1)
 	{
-		//printf("arg is: %s\n", argv[1]);
+		degree = 0;
+		scan1(degree, "JAMMER01", 10, "wifly.csv");
+	}
+	else if(argc == 2)
+	{
 		degree = atoi(argv[1]);
-	}
+		scan1(degree, "JAMMER01", 10, "wifly.csv");
 
-	/* Start the connection to the WiFly */
-	/* If the connection does not exist, quit */
-	int fd = startconnection();
-	if (fd < 0)
+	}
+	else if(argc == 3)
 	{
-		printf("Error connecting to wifly. Exiting...\n");
+		degree = atoi(argv[2]);
+		if (atoi(argv[1]) == 1)
+			scan1(degree, "JAMMER01", 10, "wifly.csv");
+		else if (atoi(argv[1]) == 2)
+			scan2(degree, "JAMMER01", 10, "wifly1.csv", "wifly2.csv");
+		else
+		{
+			printf("Only supports one or two wifly modules at the moment.\n");
+			printf("value is : %s\n", argv[1]);
+			return 0;
+		}
+	}
+	else
+	{
+		printf("Invalid number of parameters entered.\n");
 		return 0;
 	}
-
-	/* Go into command mode */
-	commandmode(fd);
-
-	/* Open a file to write values to */
-	/* Appending values */
-	FILE *f = fopen("wiflytest.csv", "a");
-	if (f == NULL)
-	{
-		printf("Error opening file\n");
-		return 0;
-	}
-
-	/* Scan values to this file */
-	/* Add degree at which you measure first */
-	fprintf(f, "%i,", degree);
-	scanrssi_f(fd, "JAMMER01", f, 10);
-
-	/* Be sure to close the output file and connection */
-	fclose(f);
-	close(fd);
 }
